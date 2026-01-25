@@ -14,7 +14,7 @@ export default function ClosingSection({ wedding }: Props) {
             <img
                 src="/images/wayang-bg-left.webp"
                 alt="Wayang Left"
-                className="absolute top-1/2 -translate-y-1/2 left-[-15%] sm:left-[-5%] md:left-[2%] h-[50vh] md:h-[70vh] w-auto object-contain opacity-30 pointer-events-none"
+                className="absolute top-1/2 z-10 -translate-y-1/2 left-[-25%] sm:left-[-25%] md:left-[25%] h-[50vh] md:h-[70vh] w-auto object-contain opacity-30 pointer-events-none"
                 onError={(e) => (e.currentTarget.style.display = "none")}
             />
 
@@ -22,16 +22,16 @@ export default function ClosingSection({ wedding }: Props) {
             <img
                 src="/images/wayang-bg-right.webp"
                 alt="Wayang Right"
-                className="absolute top-1/2 -translate-y-1/2 right-[-15%] sm:right-[-5%] md:right-[2%] h-[50vh] md:h-[70vh] w-auto object-contain opacity-30 pointer-events-none"
+                className="absolute top-1/2 z-10 -translate-y-1/2 right-[-25%] sm:right-[-25%] md:right-[25%] h-[50vh] md:h-[70vh] w-auto object-contain opacity-30 pointer-events-none"
                 onError={(e) => (e.currentTarget.style.display = "none")}
             />
 
             {/* Lotus Watermark - Centered */}
-            <div className="absolute inset-0 w-full h-full z-0 pointer-events-none flex items-center justify-center">
+            <div className="absolute inset-0 w-full h-full z-20 pointer-events-none flex items-center justify-center">
                 <img
                     src="/images/lotus-watermark.webp"
                     alt="Lotus Watermark"
-                    className="w-[60%] max-w-[450px] h-auto object-contain opacity-[0.6]"
+                    className="w-[60%] max-w-[450px] h-auto object-contain opacity-[0.8]"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                 />
             </div>
@@ -56,7 +56,7 @@ export default function ClosingSection({ wedding }: Props) {
                             "{wedding.quote_text}"
                         </p>
                         <p className="text-xs opacity-60 font-sans">
-                            — Bhagavad Gita
+                            — Bhagavad Gita  —
                         </p>
                     </div>
                 )}
@@ -67,11 +67,6 @@ export default function ClosingSection({ wedding }: Props) {
                     <div className="h-2 w-2 rotate-45 bg-[#462e29]"></div>
                     <div className="h-[2px] w-12 bg-gradient-to-r from-[#462e29] to-transparent"></div>
                 </div>
-
-                {/* Heading */}
-                <h2 className="text-3xl sm:text-4xl font-bold font-bali tracking-wide">
-                    Salam-salam
-                </h2>
 
                 {/* Closing Message */}
                 <div className="space-y-4 text-sm sm:text-base leading-relaxed">

@@ -37,13 +37,13 @@ const dummyWeddingData: WeddingInfo = {
     groom_short_name: "Agus",
     groom_father_name: "I Nyoman Wijaya",
     groom_mother_name: "Ni Made Murni",
-    event_date: "2026-01-31", // Tanggal masa depan agar countdown jalan
-    event_time: "10:00:00",
+    event_date: "2026-02-14",
+    event_time: "16:00:00",
     event_timezone: "WITA",
     venue_name: "Gedung Serbaguna Werdhi Budaya",
     venue_address:
-        "Jl. Nusa Indah No.1, Panjer, Denpasar Selatan, Kota Denpasar, Bali",
-    maps_embed_url: "https://www.google.com/maps/embed?pb=...", // Placeholder URL
+        "Jln.Ir. Sutami, Br.Medahan, Desa Kemenuh, Sukawati, Gianyar",
+    maps_embed_url: "https://maps.google.com/maps?q=-8.558103,115.2867391&z=17&output=embed", // Placeholder URL
     music_url: "/music/wedding-song.mp3", // Pastikan file ada atau kosongkan
     opening_text:
         "Atas Asung Kertha Ida Sang Hyang Widhi Wasa/Tuhan Yang Maha Esa, kami bermaksud mengundang Bapak/Ibu/Saudara/i pada",

@@ -34,6 +34,30 @@ export default function ParticipantSection() {
 
     const participants = [
         {
+            name: "Ni Wayan Diniyanti",
+            label: "Putri Pertama dari Pasangan",
+            parents: [
+                "I Made Agus Susila",
+                "Ni Ketut Sudarti",
+            ],
+        },
+        {
+            name: "Ni Made Dinayarti",
+            label: "Putri Kedua dari Pasangan",
+            parents: [
+                "I Made Agus Susila",
+                "Ni Ketut Sudarti",
+            ],
+        },
+        {
+            name: "I Nyoman Sanjaya Putra",
+            label: "Putra Ketiga dari Pasangan",
+            parents: [
+                "I Made Agus Susila",
+                "Ni Ketut Sudarti",
+            ],
+        },
+        {
             name: "I Gede Damar Arya Airlangga",
             label: "Putra Pertama dari Pasangan",
             parents: [
@@ -42,35 +66,27 @@ export default function ParticipantSection() {
             ],
         },
         {
-            name: "Ni Made Dwi Antari",
-            label: "Putri Kedua dari Pasangan",
+            name: "I Made Dharma Smarajiwa Bumilangga",
+            label: "Putra Kedua dari Pasangan",
             parents: [
                 "I Ketut Agus Darmawan, ST",
                 "Ni Made Mia Indah Sari, SE., Ak",
             ],
         },
         {
-            name: "I Nyoman Triyana Artha",
+            name: "I Komang Wahyu Antara",
             label: "Putra Ketiga dari Pasangan",
             parents: [
-                "I Ketut Agus Darmawan, ST",
-                "Ni Made Mia Indah Sari, SE., Ak",
+                "I Wayan Urip Santosa",
+                "Ni Wayan Dani",
             ],
         },
         {
-            name: "Ni Ketut Catur Wulandari",
-            label: "Putri Keempat dari Pasangan",
+            name: "Ni Wayan Puriyanti",
+            label: "Putri Pertama dari Pasangan",
             parents: [
-                "I Ketut Agus Darmawan, ST",
-                "Ni Made Mia Indah Sari, SE., Ak",
-            ],
-        },
-        {
-            name: "I Putu Panca Nugraha",
-            label: "Putra Kelima dari Pasangan",
-            parents: [
-                "I Ketut Agus Darmawan, ST",
-                "Ni Made Mia Indah Sari, SE., Ak",
+                "I Wayan Urip Santosa",
+                "Ni Wayan Dani",
             ],
             isLast: true,
         },
@@ -133,7 +149,7 @@ export default function ParticipantSection() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 justify-items-center pb-40">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 justify-items-center pb-40">
                     {participants.map((person, index) => {
                         // CASCADING DECK LOGIC
                         // Base Top: 160px (di bawah header)
@@ -146,7 +162,7 @@ export default function ParticipantSection() {
                         return (
                             <div
                                 key={index}
-                                className={`sticky w-full max-w-[200px] ${person.isLast ? "md:col-span-2 mb-0" : "mb-[20vh]"} transition-all duration-500`}
+                                className={`sticky w-full max-w-[200px] ${person.isLast ? "md:col-span-3 mb-0" : "mb-[20vh]"} transition-all duration-500`}
                                 style={{
                                     top: `${stickyTop}px`, // Dynamic Top
                                     zIndex: index + 10,

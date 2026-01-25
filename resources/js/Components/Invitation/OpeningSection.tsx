@@ -24,13 +24,14 @@ export default function OpeningSection({ wedding }: Props) {
     }, []);
 
     return (
-        <div className="relative w-full pt-48 pb-12 px-6">
+        <div className="relative w-full h-full flex flex-col justify-center pt-24 pb-12 px-6">
             {/* Aset Background: Top Border (Tetap tajam, tidak kena opacity) */}
             <div className="absolute top-0 left-0 w-full z-0 pointer-events-none">
                 <img
                     src="/images/main-top-border.webp"
                     alt="Top Border Decoration"
-                    className="w-full h-auto object-contain opacity-90"
+                    className="w-full h-auto object-cover opacity-90"
+                    style={{ minHeight: "100px" }} // Ensure visibility even if small
                 />
             </div>
 

@@ -8,20 +8,20 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuestController;
 
 
-Route::get('/to/{slug}', [InvitationController::class, 'show'])->name('invitation.show');
+Route::get('metatah-t’jikra-family/to/{slug}', [InvitationController::class, 'show'])->name('invitation.show');
 Route::get('/', [InvitationController::class, 'index'])->name('invitation.index');
 
 // Admin Routes (Protected by auth middleware)
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // Guest Management
     Route::get('/guests', [GuestController::class, 'index'])->name('guests.index');
     Route::post('/guests', [GuestController::class, 'store'])->name('guests.store');
     Route::put('/guests/{guest}', [GuestController::class, 'update'])->name('guests.update');
     Route::delete('/guests/{guest}', [GuestController::class, 'destroy'])->name('guests.destroy');
-    
+
     // Bulk Operations
     Route::post('/guests/import', [GuestController::class, 'bulkImport'])->name('guests.import');
     Route::get('/guests/export', [GuestController::class, 'export'])->name('guests.export');
@@ -35,4 +35,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

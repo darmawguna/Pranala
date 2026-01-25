@@ -32,18 +32,14 @@ export default function CoverSection({ guest, wedding, onOpen }: Props) {
 
     return (
         <div className="fixed inset-0 z-50 overflow-hidden flex items-center justify-center">
-            {/* Inject Font khusus */}
-            <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
-                .font-bali { font-family: 'Cormorant Garamond', serif; }
-            `}</style>
+
 
             {/* --- LAYOUT BACKGROUND SPLIT DIAGONAL --- */}
 
             {/* 1. LAYER SAGE (KANAN ATAS) */}
             {/* Clip path memotong membentuk segitiga siku-siku di kanan atas */}
             <div
-                className={`absolute inset-0 bg-[#A39F86] transition-transform duration-[1500ms] ease-in-out z-10
+                className={`absolute inset-0 bg-[#A39F86] transition-transform duration-[15000ms] ease-in-out z-10
                 ${isOpening ? "translate-x-full -translate-y-full" : "translate-x-0 translate-y-0"}`}
                 style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%)" }}
             >
@@ -63,7 +59,7 @@ export default function CoverSection({ guest, wedding, onOpen }: Props) {
             {/* 2. LAYER COKELAT (KIRI BAWAH) */}
             {/* Clip path memotong membentuk segitiga siku-siku di kiri bawah */}
             <div
-                className={`absolute inset-0 bg-[#462e29] transition-transform duration-[1500ms] ease-in-out z-10
+                className={`absolute inset-0 bg-[#462e29] transition-transform duration-[15000ms] ease-in-out z-10
                 ${isOpening ? "-translate-x-full translate-y-full" : "translate-x-0 translate-y-0"}`}
                 style={{ clipPath: "polygon(0 0, 100% 100%, 0 100%)" }}
             >
@@ -83,7 +79,7 @@ export default function CoverSection({ guest, wedding, onOpen }: Props) {
             {/* --- KONTEN TENGAH (TEXT & BUTTON) --- */}
             {/* Z-Index 20 agar berada di atas background */}
             <div
-                className={`relative z-20 w-full h-full flex flex-col justify-between py-16 px-6 transition-opacity duration-700
+                className={`relative z-20 w-full h-full flex flex-col justify-between py-16 px-6 transition-opacity duration-[15000ms]
                 ${isOpening ? "opacity-0" : "opacity-100"}`}
             >
                 {/* BAGIAN ATAS (Di area Sage/Krem) */}

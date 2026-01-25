@@ -15,7 +15,7 @@ export default function MapSection({ wedding }: Props) {
                 <iframe
                     src={
                         wedding.maps_embed_url ||
-                        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.59123456789!2d115.3056789!3d-8.5678901!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwMzQnMDQuNCJTIDExNcKwMTgnMjAuNCJF!5e0!3m2!1sen!2sid!4v1600000000000!5m2!1sen!2sid"
+                        "https://maps.google.com/maps?q=-8.558103,115.2867391&z=17&output=embed"
                     }
                     width="100%"
                     height="100%"

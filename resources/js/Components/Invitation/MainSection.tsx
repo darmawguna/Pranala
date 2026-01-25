@@ -13,7 +13,7 @@ export default function MainSection({ wedding }: Props) {
         <div className="min-h-screen bg-[#F4F1EA] text-[#462e29] font-serif flex flex-col relative">
             {/* STICKY OPENING SECTION */}
             {/* Tetap di tempat saat di-scroll, tertutup oleh ParticipantSection */}
-            <div className="sticky top-0 h-screen w-full z-0 flex flex-col justify-center">
+            <div className="sticky top-0 h-screen w-full z-0 flex flex-col">
                 <OpeningSection wedding={wedding} />
             </div>
 
