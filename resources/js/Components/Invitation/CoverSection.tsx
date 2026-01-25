@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/Components/ui/button";
+import { WeddingInfo } from "@/types";
 
-interface WeddingInfo {
-    bride_short_name?: string;
-    groom_short_name?: string;
-}
+
 
 interface Guest {
     name: string;

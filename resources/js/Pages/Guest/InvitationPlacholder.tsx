@@ -7,6 +7,12 @@ import { Button } from "@/Components/ui/button";
 import { Calendar, MapPin, Clock } from "lucide-react";
 import CoverSection from "@/Components/Invitation/CoverSection";
 import MainSection from "@/Components/Invitation/MainSection";
+import EventDetailsSection from "@/Components/Invitation/EventDetailsSection";
+import TimeEventSection from "@/Components/Invitation/TimeEventSection";
+import MapSection from "@/Components/Invitation/MapSection";
+import ClosingSection from "@/Components/Invitation/ClosingSection";
+import { WeddingInfo } from "@/types";
+
 interface Guest {
     id: number;
     name: string;
@@ -14,30 +20,7 @@ interface Guest {
     is_opened: boolean;
 }
 
-// 1. Membuat semua field menjadi nullable (opsional) dengan tanda '?'
-interface WeddingInfo {
-    bride_full_name?: string;
-    bride_short_name?: string;
-    bride_father_name?: string;
-    bride_mother_name?: string;
-    groom_full_name?: string;
-    groom_short_name?: string;
-    groom_father_name?: string;
-    groom_mother_name?: string;
-    event_date?: string;
-    event_time?: string;
-    event_timezone?: string;
-    venue_name?: string;
-    venue_address?: string;
-    maps_embed_url?: string;
-    cover_image?: string;
-    bride_photo?: string;
-    groom_photo?: string;
-    music_url?: string;
-    opening_text?: string;
-    closing_text?: string;
-    quote_text?: string;
-}
+
 
 interface Props {
     guest: Guest;
@@ -54,7 +37,7 @@ const dummyWeddingData: WeddingInfo = {
     groom_short_name: "Agus",
     groom_father_name: "I Nyoman Wijaya",
     groom_mother_name: "Ni Made Murni",
-    event_date: "2025-12-31", // Tanggal masa depan agar countdown jalan
+    event_date: "2026-01-31", // Tanggal masa depan agar countdown jalan
     event_time: "10:00:00",
     event_timezone: "WITA",
     venue_name: "Gedung Serbaguna Werdhi Budaya",
@@ -127,14 +110,19 @@ export default function Invitation({ guest, wedding }: Props) {
             {/* Main Content - Shown after opening */}
             <div
                 id="main-content"
-                className={`transition-all duration-1000 ease-in-out ${
-                    showContent
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-10"
-                }`}
+                className={`transition-all duration-1000 ease-in-out ${showContent
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
+                    }`}
             >
                 {/* Kita ganti semua section lama dengan 1 Component baru */}
                 <MainSection wedding={displayWedding} />
+            </div>
+
+            <div>
+                <TimeEventSection wedding={displayWedding} />
+                <MapSection wedding={displayWedding} />
+                <ClosingSection wedding={displayWedding} />
             </div>
         </>
     );
