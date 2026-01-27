@@ -6,10 +6,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GuestController;
+use App\Http\Controllers\WishController;
 
 
-Route::get('metatah-t’jikra-family/to/{slug}', [InvitationController::class, 'show'])->name('invitation.show');
+Route::get('metatah-tjikra-family/to/{slug}', [InvitationController::class, 'show'])->name('invitation.show');
 Route::get('/', [InvitationController::class, 'index'])->name('invitation.index');
+
+// Wishes Routes
+Route::get('wishes', [WishController::class, 'index'])->name('wishes.index');
+Route::post('wishes/send', [WishController::class, 'store'])->name('wishes.store');
+
+
+
 
 // Admin Routes (Protected by auth middleware)
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
@@ -27,7 +35,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('/guests/export', [GuestController::class, 'export'])->name('guests.export');
     Route::get('/guests/export/links', [GuestController::class, 'exportLinks'])->name('guests.export.links');
     Route::get('/guests/export/full', [GuestController::class, 'exportFullData'])->name('guests.export.full');
+
+    // Wishes Admin
+    Route::delete('/wishes/{wish}', [WishController::class, 'destroy'])->name('wishes.destroy');
 });
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

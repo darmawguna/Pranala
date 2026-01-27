@@ -34,7 +34,7 @@ export default function ParticipantSection() {
 
     const participants = [
         {
-            name: "Ni Wayan Diniyanti",
+            name: "Ni Wayan Diniyarti",
             label: "Putri Pertama dari Pasangan",
             parents: [
                 "I Made Agus Susila",
@@ -74,16 +74,16 @@ export default function ParticipantSection() {
             ],
         },
         {
-            name: "I Komang Wahyu Antara",
-            label: "Putra Ketiga dari Pasangan",
+            name: "Ni Wayan Puriyanti",
+            label: "Putri Pertama dari Pasangan",
             parents: [
                 "I Wayan Urip Santosa",
                 "Ni Wayan Dani",
             ],
         },
         {
-            name: "Ni Wayan Puriyanti",
-            label: "Putri Pertama dari Pasangan",
+            name: "I Komang Wahyu Antara",
+            label: "Putra Ketiga dari Pasangan",
             parents: [
                 "I Wayan Urip Santosa",
                 "Ni Wayan Dani",
@@ -101,6 +101,7 @@ export default function ParticipantSection() {
                     src="/images/wayang-bg-left.webp"
                     alt="Wayang Left"
                     className="absolute top-1/2 -translate-y-1/2 left-[-20%] sm:left-[-10%] md:left-[2%] h-[60vh] md:h-[80vh] w-auto object-contain opacity-20 transition-all duration-700 ease-out"
+                    loading="lazy"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                 />
                 {/* Wayang Kanan */}
@@ -108,8 +109,10 @@ export default function ParticipantSection() {
                     src="/images/wayang-bg-right.webp"
                     alt="Wayang Right"
                     className="absolute top-1/2 -translate-y-1/2 right-[-20%] sm:right-[-10%] md:right-[2%] h-[60vh] md:h-[80vh] w-auto object-contain opacity-20 transition-all duration-700 ease-out"
+                    loading="lazy"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                 />
+
             </div>
 
             <div className="relative z-10 max-w-4xl mx-auto w-full">
@@ -132,7 +135,7 @@ export default function ParticipantSection() {
 
                 {/* 2. Bottom Escort Header */}
                 <div
-                    className={`fixed bottom-4 w-[calc(100%-2rem)] max-w-4xl mx-auto bg-[#F4F1EA] text-center py-4 rounded-xl shadow-xl border border-[#462e29]/10 z-50 transition-all duration-500 ease-in-out transform ${headerPosition === "bottom"
+                    className={`fixed bottom-4 w-[calc(100%-2rem)] max-w-4xl mx-auto bg-[#F4F1EA] text-center py-4 rounded-xl  border border-[#462e29]/10 z-50 transition-all duration-500 ease-in-out transform ${headerPosition === "bottom"
                         ? "opacity-100 translate-y-0 pointer-events-auto"
                         : "opacity-0 translate-y-10 pointer-events-none"
                         }`}

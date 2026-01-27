@@ -155,7 +155,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
     };
 
     const copyInvitationLink = (slug: string) => {
-        const url = `${window.location.origin}/to/${slug}`;
+        const url = `${window.location.origin}/metatah-tjikra-family/to/${slug}`;
         navigator.clipboard.writeText(url);
         alert("Link berhasil disalin!");
     };
@@ -344,7 +344,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                     "file",
                                                                     e.target
                                                                         .files?.[0] ||
-                                                                        null,
+                                                                    null,
                                                                 )
                                                             }
                                                             required
@@ -528,7 +528,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                 title="Buka undangan"
                                                             >
                                                                 <a
-                                                                    href={`/to/${guest.slug}`}
+                                                                    href={`/metatah-tjikra-family/to/${guest.slug}`}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                 >
@@ -600,11 +600,10 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                     "admin.guests.index",
                                                     { page, ...filters },
                                                 )}
-                                                className={`px-3 py-1 rounded ${
-                                                    page === guests.current_page
-                                                        ? "bg-blue-600 text-white"
-                                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                                }`}
+                                                className={`px-3 py-1 rounded ${page === guests.current_page
+                                                    ? "bg-blue-600 text-white"
+                                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                                    }`}
                                             >
                                                 {page}
                                             </Link>

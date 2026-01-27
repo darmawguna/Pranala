@@ -11,8 +11,7 @@ class InvitationController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Guest/Invitation', [
-        ]);
+        return Inertia::render('Guest/Invitation', []);
     }
     public function show(string $slug)
     {

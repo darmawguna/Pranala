@@ -1,17 +1,27 @@
 import { Head } from "@inertiajs/react";
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import CountdownTimer from "@/Components/CountdownTimer";
 import MusicPlayer from "@/Components/MusicPlayer";
 import MapsEmbed from "@/Components/MapsEmbed";
 import { Button } from "@/Components/ui/button";
-import { Calendar, MapPin, Clock } from "lucide-react";
+import { Calendar, MapPin, Clock, Loader2 } from "lucide-react";
 import CoverSection from "@/Components/Invitation/CoverSection";
 import MainSection from "@/Components/Invitation/MainSection";
-import EventDetailsSection from "@/Components/Invitation/EventDetailsSection";
-import TimeEventSection from "@/Components/Invitation/TimeEventSection";
-import MapSection from "@/Components/Invitation/MapSection";
-import ClosingSection from "@/Components/Invitation/ClosingSection";
 import { WeddingInfo } from "@/types";
+
+// Lazy Loaded Sections
+const TimeEventSection = lazy(() => import("@/Components/Invitation/TimeEventSection"));
+const MapSection = lazy(() => import("@/Components/Invitation/MapSection"));
+const WishesSection = lazy(() => import("@/Components/Invitation/WishesSection"));
+const ClosingSection = lazy(() => import("@/Components/Invitation/ClosingSection"));
+
+const SectionLoader = () => (
+    <div className="w-full py-12 flex justify-center items-center opacity-30">
+        <Loader2 className="w-6 h-6 animate-spin text-[#462e29]" />
+    </div>
+);
+
+
 
 interface Guest {
     id: number;
@@ -44,7 +54,7 @@ const dummyWeddingData: WeddingInfo = {
     venue_address:
         "Jln.Ir. Sutami, Br.Medahan, Desa Kemenuh, Sukawati, Gianyar",
     maps_embed_url: "https://maps.google.com/maps?q=-8.558103,115.2867391&z=17&output=embed", // Placeholder URL
-    music_url: "/music/wedding-song.mp3", // Pastikan file ada atau kosongkan
+    music_url: "/music/GenderBali.mp3", // Pastikan file ada atau kosongkan
     opening_text:
         "Atas Asung Kertha Ida Sang Hyang Widhi Wasa/Tuhan Yang Maha Esa, kami bermaksud mengundang Bapak/Ibu/Saudara/i pada",
     closing_text:
@@ -119,11 +129,16 @@ export default function Invitation({ guest, wedding }: Props) {
                 <MainSection wedding={displayWedding} />
             </div>
 
-            <div>
-                <TimeEventSection wedding={displayWedding} />
-                <MapSection wedding={displayWedding} />
-                <ClosingSection wedding={displayWedding} />
-            </div>
+            <Suspense fallback={<SectionLoader />}>
+                <div>
+                    <TimeEventSection wedding={displayWedding} />
+                    <MapSection wedding={displayWedding} />
+                    <WishesSection wedding={displayWedding} guest={guest} />
+                    <ClosingSection wedding={displayWedding} />
+                </div>
+            </Suspense>
+
+
         </>
     );
 }

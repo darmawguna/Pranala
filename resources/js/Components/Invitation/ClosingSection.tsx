@@ -53,10 +53,10 @@ export default function ClosingSection({ wedding }: Props) {
                 {wedding.quote_text && (
                     <div className="space-y-2">
                         <p className="text-sm italic leading-relaxed opacity-80">
-                            "{wedding.quote_text}"
+                            "Sahayajnah prajah srstva purovaca prajapatih, anena prasavisyadhvam esa vo 'stv ista-kamadhuk."
                         </p>
                         <p className="text-xs opacity-60 font-sans">
-                            — Bhagavad Gita  —
+                            — Bhagavad Gita, Bab III, Sloka 10  —
                         </p>
                     </div>
                 )}
@@ -94,10 +94,10 @@ export default function ClosingSection({ wedding }: Props) {
                 <div className="pt-8 text-sm opacity-80">
                     <p>Kami yang berbahagia,</p>
                     <p className="font-semibold mt-1">
-                        Keluarga {wedding.bride_short_name || "Mempelai"} & {wedding.groom_short_name || "Mempelai"}
+                        Keluarga I Made Agus Susila, I Ketut Agus Dharmawan, ST, dan I Wayan Urip Sentosa
                     </p>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

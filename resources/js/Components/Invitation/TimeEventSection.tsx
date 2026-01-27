@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { WeddingInfo } from "@/types";
 
-
-
 interface Props {
     wedding: WeddingInfo;
 }
@@ -30,10 +28,10 @@ export default function TimeEventSection({ wedding }: Props) {
                 setTimeLeft({
                     days: Math.floor(distance / (1000 * 60 * 60 * 24)),
                     hours: Math.floor(
-                        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
                     ),
                     minutes: Math.floor(
-                        (distance % (1000 * 60 * 60)) / (1000 * 60)
+                        (distance % (1000 * 60 * 60)) / (1000 * 60),
                     ),
                     seconds: Math.floor((distance % (1000 * 60)) / 1000),
                 });
@@ -80,7 +78,9 @@ export default function TimeEventSection({ wedding }: Props) {
             <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center gap-8">
                 {/* Header Date */}
                 <div className="text-center space-y-2">
-                    <p className="font-bold text-lg md:text-xl font-serif">Pada</p>
+                    <p className="font-bold text-lg md:text-xl font-serif">
+                        Pada
+                    </p>
 
                     {/* Horizontal Divider / Mid Ornament */}
                     <img
@@ -103,12 +103,12 @@ export default function TimeEventSection({ wedding }: Props) {
                 <div className="w-full h-px bg-[#462e29]/20 my-4 max-w-xs mx-auto md:hidden"></div>
 
                 {/* Content Grid */}
-                <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-center mt-8">
+                <div className="w-full grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-2 items-center mt-8">
                     {/* Left: Address */}
-                    <div className="text-center md:text-right space-y-2 px-4">
+                    <div className="text-center md:text-right space-y-2 px-4 mb-4">
                         <h3 className="font-bold text-lg leading-relaxed">
-                            {wedding.venue_address ||
-                                "Jln. Ir. Sutami, Br. Medahan, Desa Kemenuh, Sukawati, Gianyar"}
+                            Jln. Ir. Sutami, Br. Medahan, Desa Kemenuh,
+                            Sukawati, Gianyar
                         </h3>
                     </div>
 
@@ -125,8 +125,14 @@ export default function TimeEventSection({ wedding }: Props) {
                         <div className="grid grid-cols-4 gap-2">
                             <CountdownBox value={timeLeft.days} label="DAYS" />
                             <CountdownBox value={timeLeft.hours} label="HRS" />
-                            <CountdownBox value={timeLeft.minutes} label="MINS" />
-                            <CountdownBox value={timeLeft.seconds} label="SECS" />
+                            <CountdownBox
+                                value={timeLeft.minutes}
+                                label="MINS"
+                            />
+                            <CountdownBox
+                                value={timeLeft.seconds}
+                                label="SECS"
+                            />
                         </div>
                     </div>
                 </div>

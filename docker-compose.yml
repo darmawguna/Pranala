@@ -1,0 +1,57 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                user: www-data
+                uid: 1000
+        image: pranala-app
+        container_name: pranala-app
+        restart: unless-stopped
+        working_dir: /var/www
+        environment:
+            DB_HOST: db
+            REDIS_HOST: redis
+        volumes:
+            - ./:/var/www
+        networks:
+            - pranala-network
+        depends_on:
+            - db
+            - redis
+        ports:
+            - "127.0.0.1:9011:9000"
+
+    db:
+        image: mysql:8.0
+        container_name: mysql-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        volumes:
+            - dbdata:/var/lib/mysql
+        networks:
+            - pranala-network
+
+    redis:
+        image: redis:alpine
+        container_name: redis
+        restart: unless-stopped
+        networks:
+            - pranala-network
+        volumes:
+            - redisdata:/data
+
+networks:
+    pranala-network:
+        driver: bridge
+
+volumes:
+    dbdata:
+    redisdata:

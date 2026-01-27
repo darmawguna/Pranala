@@ -101,10 +101,12 @@ export default function CoverSection({ guest, wedding, onOpen }: Props) {
                         src="/images/terataiCover.webp"
                         alt="Wayang"
                         className="w-full h-full object-contain drop-shadow-md"
+                        loading="lazy"
                         onError={(e) =>
                             (e.currentTarget.style.display = "none")
                         }
                     />
+
                 </div>
 
                 {/* BAGIAN BAWAH (Di area Cokelat) */}

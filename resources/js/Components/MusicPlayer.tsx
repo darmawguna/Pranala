@@ -14,35 +14,31 @@ export default function MusicPlayer({
     const audioRef = useRef<HTMLAudioElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
-    const [hasInteracted, setHasInteracted] = useState(false);
+
 
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
 
-        // Try to autoplay (will only work after user interaction due to browser policies)
-        if (autoplay && hasInteracted) {
-            audio.play().catch(() => {
-                // Autoplay failed, user needs to interact
+        if (autoplay) {
+            audio.play().catch((error) => {
+                console.log("Autoplay blocked or failed:", error);
                 setIsPlaying(false);
             });
         }
-    }, [autoplay, hasInteracted]);
+    }, [autoplay, musicUrl]);
 
     const togglePlay = () => {
         const audio = audioRef.current;
         if (!audio) return;
 
-        if (!hasInteracted) {
-            setHasInteracted(true);
-        }
-
         if (isPlaying) {
             audio.pause();
+            setIsPlaying(false);
         } else {
-            audio.play();
+            audio.play().catch(console.error);
+            setIsPlaying(true);
         }
-        setIsPlaying(!isPlaying);
     };
 
     const toggleMute = () => {
@@ -54,7 +50,7 @@ export default function MusicPlayer({
     };
 
     return (
-        <div className="fixed bottom-8 right-8 z-50 flex gap-2">
+        <div className="fixed bottom-6 right-6 z-[60] flex flex-col gap-2 scale-90 sm:scale-100 origin-bottom-right">
             <audio
                 ref={audioRef}
                 src={musicUrl}
@@ -67,27 +63,34 @@ export default function MusicPlayer({
                 size="icon"
                 variant="secondary"
                 onClick={togglePlay}
-                className="rounded-full shadow-lg bg-white/90 backdrop-blur hover:bg-white"
+                className={`rounded-full shadow-xl backdrop-blur transition-all duration-300 ${
+                    isPlaying
+                        ? "bg-[#462e29] text-white hover:bg-[#5a3c36]"
+                        : "bg-white/90 text-[#462e29] hover:bg-white"
+                }`}
             >
                 {isPlaying ? (
-                    <Pause className="h-5 w-5" />
+                    <div className="relative flex items-center justify-center">
+                        <Pause className="h-5 w-5" />
+                        <div className="absolute -inset-2 border-2 border-[#462e29]/20 rounded-full animate-ping" />
+                    </div>
                 ) : (
                     <Play className="h-5 w-5 ml-0.5" />
                 )}
             </Button>
 
-            <Button
+            {/* <Button
                 size="icon"
                 variant="secondary"
                 onClick={toggleMute}
-                className="rounded-full shadow-lg bg-white/90 backdrop-blur hover:bg-white"
+                className="rounded-full shadow-lg bg-white/80 backdrop-blur hover:bg-white text-[#462e29]/70"
             >
                 {isMuted ? (
                     <VolumeX className="h-5 w-5" />
                 ) : (
                     <Volume2 className="h-5 w-5" />
                 )}
-            </Button>
+            </Button> */}
         </div>
     );
 }
