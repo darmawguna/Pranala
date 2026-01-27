@@ -14,7 +14,8 @@ services:
             DB_HOST: db
             REDIS_HOST: redis
         volumes:
-            - ./:/var/www
+            # - ./:/var/www # Disable this for production to use the built image files
+            - ./storage:/var/www/storage # Persist storage logs, uploads, etc
         networks:
             - pranala-network
         depends_on:
