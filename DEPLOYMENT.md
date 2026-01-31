@@ -109,6 +109,63 @@ your-domain.com {
     ]);
     ```
 
+---
+
+## Rebuild After Project Update
+
+Ketika ada pembaruan pada project (misalnya pull code terbaru dari repository), jalankan langkah-langkah berikut:
+
+### 1. Pull Latest Code
+```bash
+cd /home/username/pranala
+git pull origin main
+```
+
+### 2. Rebuild Docker Containers
+```bash
+# Rebuild dan restart containers
+docker-compose up -d --build
+```
+
+### 3. Update Dependencies & Assets
+```bash
+# Install/update PHP dependencies (jika composer.lock berubah)
+docker-compose exec app composer install --no-dev --optimize-autoloader
+
+# Copy frontend assets yang baru di-build
+docker cp pranala-app:/var/www/public/build ./public/
+```
+
+### 4. Run Migrations (jika ada)
+```bash
+docker-compose exec app php artisan migrate --force
+```
+
+### 5. Clear Caches
+```bash
+docker-compose exec app php artisan config:cache
+docker-compose exec app php artisan route:cache
+docker-compose exec app php artisan view:cache
+```
+
+### Quick Rebuild Script (Opsional)
+Buat file `rebuild.sh` di root project:
+```bash
+#!/bin/bash
+git pull origin main
+docker-compose up -d --build
+docker-compose exec app composer install --no-dev --optimize-autoloader
+docker cp pranala-app:/var/www/public/build ./public/
+docker-compose exec app php artisan migrate --force
+docker-compose exec app php artisan config:cache
+docker-compose exec app php artisan route:cache
+docker-compose exec app php artisan view:cache
+echo "✅ Rebuild completed!"
+```
+Jalankan dengan: `chmod +x rebuild.sh && ./rebuild.sh`
+
+---
+
 ## Troubleshooting Cheat Sheet
 
 | Error | Cause | Solution |
