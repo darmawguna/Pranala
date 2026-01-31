@@ -34,7 +34,7 @@ export default function ParticipantSection() {
 
     const participants = [
         {
-            name: "Ni Wayan Diniyarti",
+            name: "Ni Wayan Diniyarti S.Pd., Gr",
             label: "Putri Pertama dari Pasangan",
             parents: [
                 "I Made Agus Susila",
@@ -61,7 +61,7 @@ export default function ParticipantSection() {
             name: "I Gede Damar Arya Airlangga",
             label: "Putra Pertama dari Pasangan",
             parents: [
-                "I Ketut Agus Darmawan, ST",
+                "I Ketut Agus Darmawan",
                 "Ni Made Mia Indah Sari, SE., Ak",
             ],
         },
@@ -69,7 +69,7 @@ export default function ParticipantSection() {
             name: "I Made Dharma Smarajiwa Bumilangga",
             label: "Putra Kedua dari Pasangan",
             parents: [
-                "I Ketut Agus Darmawan, ST",
+                "I Ketut Agus Darmawan",
                 "Ni Made Mia Indah Sari, SE., Ak",
             ],
         },

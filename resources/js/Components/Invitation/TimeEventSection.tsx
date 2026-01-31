@@ -45,22 +45,12 @@ export default function TimeEventSection({ wedding }: Props) {
         <div className="relative w-full py-16 px-4 bg-[#F4F1EA] text-[#462e29] font-serif overflow-hidden">
             {/* Background Images Layer */}
 
-            {/* Mid Ornament - LEFT SIDE (vertical decoration) */}
-            <div className="absolute top-0 left-0 h-full z-0 pointer-events-none">
+            {/* Mid Ornament - Full Background */}
+            <div className="absolute inset-0 w-full h-full z-0 pointer-events-none">
                 <img
                     src="/images/mid.webp"
-                    alt="Left Decoration"
-                    className="h-full w-auto object-contain opacity-40"
-                    onError={(e) => (e.currentTarget.style.display = "none")}
-                />
-            </div>
-
-            {/* Mid Ornament - RIGHT SIDE (mirrored) */}
-            <div className="absolute top-0 right-0 h-full z-0 pointer-events-none scale-x-[-1]">
-                <img
-                    src="/images/mid.webp"
-                    alt="Right Decoration"
-                    className="h-full w-auto object-contain opacity-40"
+                    alt="Background Decoration"
+                    className="w-full h-full object-cover opacity-40"
                     onError={(e) => (e.currentTarget.style.display = "none")}
                 />
             </div>
@@ -81,13 +71,6 @@ export default function TimeEventSection({ wedding }: Props) {
                     <p className="font-bold text-lg md:text-xl font-serif">
                         Pada
                     </p>
-
-                    {/* Horizontal Divider / Mid Ornament */}
-                    <img
-                        src="/images/mid.webp"
-                        alt="Divider"
-                        className="h-auto w-32 md:w-48 mx-auto opacity-80"
-                    />
 
                     <div className="flex flex-col items-center justify-center">
                         <span className="text-6xl md:text-7xl font-bold font-serif leading-none tracking-tight">

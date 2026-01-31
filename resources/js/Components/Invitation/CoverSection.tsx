@@ -89,9 +89,9 @@ export default function CoverSection({ guest, wedding, onOpen }: Props) {
                     </p>
                     <div className="font-bali text-2xl sm:text-3xl text-white font-bold leading-relaxed drop-shadow-md">
                         <p>I Made Agus Susila</p>
-                        <p>I Ketut Agus Dharmawan, ST</p>
+                        <p>I Ketut Agus Dharmawan</p>
                         <p className="text-xl">&</p>
-                        <p>I Wayan Urip Sentosa</p>
+                        <p>I Wayan Urip Santosa</p>
                     </div>
                 </div>
 

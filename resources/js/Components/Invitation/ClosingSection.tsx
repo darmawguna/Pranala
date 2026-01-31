@@ -94,7 +94,7 @@ export default function ClosingSection({ wedding }: Props) {
                 <div className="pt-8 text-sm opacity-80">
                     <p>Kami yang berbahagia,</p>
                     <p className="font-semibold mt-1">
-                        Keluarga I Made Agus Susila, I Ketut Agus Dharmawan, ST, dan I Wayan Urip Sentosa
+                        Keluarga I Made Agus Susila, I Ketut Agus Dharmawan, dan I Wayan Urip Santosa
                     </p>
                 </div>
             </div>

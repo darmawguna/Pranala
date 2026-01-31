@@ -43,14 +43,23 @@ export default function OpeningSection({ wedding }: Props) {
                 style={{ opacity: textOpacity, transition: "opacity 0.1s ease-out" }}
             >
                 <div className="text-4xl font-bold opacity-80 text-[#462e29] mb-2">
-                    ᬒᬁ​ᬲ᭄ᬯᬲ᭄ᬢᬶ​ᬅᬲ᭄ᬢᬸ
+                    ᬒᬫᬵᬲᬯᬲᬶᬬᬵᬲᬶᬢᬸ
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-bold font-bali tracking-wide text-[#462e29]">
-                    Om Swastiastu
+                    Om Swastyastu
                 </h2>
                 <p className="italic text-lg opacity-80 font-serif text-[#462e29]">
                     Om Awignamastu Namo Siddham
                 </p>
+
+                <div className="text-sm sm:text-base leading-relaxed font-sans font-medium text-[#462e29]/80 px-4 gap-3">
+                    <p className="mb-3">
+                        "Kadyangganing kumba pramana, kadi kumba kanyut ring madhya ning banyu, mangkana ling ning loka, kadi manusa kanyut ring madhya ning sasara."
+                    </p>
+                    <p className="sm:text-sm">
+                        "Bagaikan sebuah periuk yang dihanyutkan di tengah-tengah air, demikianlah hendaknya manusia dibersihkan dari segala kekotoran jiwa (Sad Ripu) agar dapat mengarungi samudra kehidupan dengan bijaksana." Lontar Dharma Kahuripan, Bait pertama
+                    </p>
+                </div>
 
                 {/* Divider */}
                 <div className="flex items-center justify-center gap-2 py-4">
