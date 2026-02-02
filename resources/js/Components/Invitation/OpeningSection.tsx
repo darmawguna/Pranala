@@ -42,8 +42,8 @@ export default function OpeningSection({ wedding }: Props) {
                 className="relative z-10 text-center space-y-4 max-w-3xl mx-auto"
                 style={{ opacity: textOpacity, transition: "opacity 0.1s ease-out" }}
             >
-                <div className="text-4xl font-bold opacity-80 text-[#462e29] mb-2">
-                    ᬒᬁ ᬲ᭄ᬯᬲ᭄ᬢ᭄ᬬᬲ᭄ᬢᬸ ᭟
+                <div className="text-4xl font-bold opacity-80 text-[#462e29] mb-2 tracking-widest">
+                    ᬒᬁᬲ᭄ᬯᬲ᭄ᬢ᭄ᬬ ᬲ᭄ᬢᬸ
                 </div>
                 <h2 className="text-3xl sm:text-4xl font-bold font-bali tracking-wide text-[#462e29]">
                     Om Swastyastu
