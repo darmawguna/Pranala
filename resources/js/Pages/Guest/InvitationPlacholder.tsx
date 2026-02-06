@@ -104,7 +104,7 @@ export default function Invitation({ guest, wedding }: Props) {
 
     return (
         <>
-            <Head title={`Undangan Pernikahan - ${guest.name}`} />
+            <Head title={`Undangan Metatah - ${guest.name}`} />
 
             {/* Music Player */}
             {displayWedding.music_url && isOpen && (
@@ -120,10 +120,11 @@ export default function Invitation({ guest, wedding }: Props) {
             {/* Main Content - Shown after opening */}
             <div
                 id="main-content"
-                className={`transition-all duration-1000 ease-in-out ${showContent
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-10"
-                    }`}
+                className={`transition-all duration-1000 ease-in-out ${
+                    showContent
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 translate-y-10"
+                }`}
             >
                 {/* Kita ganti semua section lama dengan 1 Component baru */}
                 <MainSection wedding={displayWedding} />
@@ -137,8 +138,6 @@ export default function Invitation({ guest, wedding }: Props) {
                     <ClosingSection wedding={displayWedding} />
                 </div>
             </Suspense>
-
-
         </>
     );
 }
