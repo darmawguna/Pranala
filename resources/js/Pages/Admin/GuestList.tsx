@@ -100,7 +100,7 @@ interface Props {
 export default function GuestList({ auth, guests, filters }: Props) {
     // Mengambil data flash secara reaktif menggunakan usePage
     const { flash } = usePage<any>().props;
-    const importResults = flash.import_results as ImportResults | undefined;
+    const importResults = flash?.import_results as ImportResults | undefined;
 
     const [searchTerm, setSearchTerm] = useState(filters.search || "");
     const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
