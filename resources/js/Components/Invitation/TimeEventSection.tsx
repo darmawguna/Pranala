@@ -101,7 +101,7 @@ export default function TimeEventSection({ wedding }: Props) {
                     {/* Right: Time & Countdown */}
                     <div className="flex flex-col items-center md:items-start space-y-4 px-4 text-center md:text-left">
                         <p className="font-bold text-lg">
-                            Pukul 16.00 Wita/selesai
+                            Pukul 16.00 Wita s.d. selesai
                         </p>
 
                         {/* Countdown Grid */}

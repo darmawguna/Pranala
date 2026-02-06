@@ -8,8 +8,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
+use Illuminate\Support\Facades\Log; // Tambahkan ini untuk debug
 
-class GuestImportService implements ToCollection, WithHeadingRow
+class GuestImportService implements ToCollection, WithHeadingRow, WithCustomCsvSettings
 {
     private array $results = [
         'success' => 0,
@@ -17,24 +19,34 @@ class GuestImportService implements ToCollection, WithHeadingRow
         'errors' => [],
     ];
 
+    public function getCsvSettings(): array
+    {
+        return [
+            'delimiter' => ';'
+        ];
+    }
+
     public function collection(Collection $rows)
     {
         foreach ($rows as $index => $row) {
-            $rowNumber = $index + 2; // +2 because index starts at 0 and we have header row
+            $rowNumber = $index + 2;
 
-            // Validate row
-            $validator = Validator::make($row->toArray(), [
+            // Handle data dari CSV Anda
+            $data = [
+                'name' => $row['name'] ?? null,
+                'phone' => $row['phone'] ?? null,
+                'address' => $row['address'] ?? $row['addres'] ?? null,
+                'type' => isset($row['type']) ? strtolower(trim($row['type'])) : 'lainnya',
+            ];
+
+            $validator = Validator::make($data, [
                 'name' => 'required|string|max:255',
-                'phone' => 'nullable|string|max:20',
-                'address' => 'nullable|string',
-                'type' => 'nullable|in:keluarga,teman,kerja,lainnya',
             ]);
 
             if ($validator->fails()) {
                 $this->results['failed']++;
                 $this->results['errors'][] = [
                     'row' => $rowNumber,
-                    'name' => $row['name'] ?? 'Unknown',
                     'errors' => $validator->errors()->all(),
                 ];
                 continue;
@@ -42,25 +54,37 @@ class GuestImportService implements ToCollection, WithHeadingRow
 
             try {
                 Guest::create([
-                    'name' => $row['name'],
-                    'slug' => Guest::generateSlug($row['name']),
-                    'phone' => $row['phone'] ?? null,
-                    'address' => $row['address'] ?? null,
-                    'invitation_type' => $row['type'] ?? 'lainnya',
+                    'name' => trim($data['name']), // Tambahkan trim agar tidak error di database karena spasi
+                    'slug' => Guest::generateSlug($data['name']),
+                    'phone' => $data['phone'],
+                    'address' => $data['address'],
+                    'invitation_type' => $data['type'] ?? 'lainnya',
                 ]);
 
                 $this->results['success']++;
             } catch (\Exception $e) {
                 $this->results['failed']++;
+                // Pastikan log tetap ada untuk developer
+                \Log::error("Import Error Row {$rowNumber}: " . $e->getMessage());
+
                 $this->results['errors'][] = [
                     'row' => $rowNumber,
-                    'name' => $row['name'],
-                    'errors' => [$e->getMessage()],
+                    'name' => $data['name'] ?? 'Tanpa Nama',
+                    'errors' => [$this->parseError($e->getMessage())], // Wrap in array for consistency
                 ];
             }
         }
     }
 
+
+    private function parseError($message): string
+    {
+        if (str_contains($message, 'Duplicate entry'))
+            return 'Data duplikat (Nama/Slug sudah ada)';
+        if (str_contains($message, 'too long'))
+            return 'Teks terlalu panjang';
+        return 'Kesalahan sistem: ' . $message;
+    }
     public function getResults(): array
     {
         return $this->results;

@@ -1,5 +1,5 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, router, useForm } from "@inertiajs/react";
+import { Head, Link, router, useForm, usePage } from "@inertiajs/react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/card";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
@@ -42,9 +42,13 @@ import {
     ChevronDown,
     FileText,
     Link2,
+    AlertTriangle,
+    CheckCircle2,
+    XCircle,
 } from "lucide-react";
 import { useState, FormEvent } from "react";
 
+// --- Interfaces ---
 interface Guest {
     id: number;
     name: string;
@@ -65,6 +69,18 @@ interface Pagination {
     total: number;
 }
 
+interface ImportError {
+    row: number;
+    name: string;
+    errors: string[];
+}
+
+interface ImportResults {
+    success: number;
+    failed: number;
+    errors: ImportError[];
+}
+
 interface Props {
     auth: any;
     guests: Pagination;
@@ -73,16 +89,25 @@ interface Props {
         type?: string;
         opened?: string;
     };
+    // Menangkap data flash dari Laravel
+    flash: {
+        success?: string;
+        error?: string;
+        import_results?: ImportResults;
+    };
 }
 
 export default function GuestList({ auth, guests, filters }: Props) {
+    // Mengambil data flash secara reaktif menggunakan usePage
+    const { flash } = usePage<any>().props;
+    const importResults = flash.import_results as ImportResults | undefined;
+
     const [searchTerm, setSearchTerm] = useState(filters.search || "");
     const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
-    // Form for adding/editing guest
     const { data, setData, post, put, processing, errors, reset } = useForm({
         name: "",
         phone: "",
@@ -90,7 +115,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
         invitation_type: "lainnya",
     });
 
-    // Upload form
     const uploadForm = useForm({
         file: null as File | null,
     });
@@ -111,7 +135,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                 onSuccess: () => {
                     setIsEditDialogOpen(false);
                     reset();
-                    alert("Tamu berhasil diupdate!");
                 },
             });
         } else {
@@ -119,7 +142,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                 onSuccess: () => {
                     setIsAddDialogOpen(false);
                     reset();
-                    alert("Tamu berhasil ditambahkan!");
                 },
             });
         }
@@ -127,11 +149,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
 
     const handleDelete = (guest: Guest) => {
         if (confirm(`Hapus ${guest.name}?`)) {
-            router.delete(route("admin.guests.destroy", guest.id), {
-                onSuccess: () => {
-                    alert("Tamu berhasil dihapus!");
-                },
-            });
+            router.delete(route("admin.guests.destroy", guest.id));
         }
     };
 
@@ -139,17 +157,10 @@ export default function GuestList({ auth, guests, filters }: Props) {
         e.preventDefault();
         if (!uploadForm.data.file) return;
 
-        const formData = new FormData();
-        formData.append("file", uploadForm.data.file);
-
-        router.post(route("admin.guests.import"), formData, {
+        uploadForm.post(route("admin.guests.import"), {
             onSuccess: () => {
                 setIsUploadDialogOpen(false);
                 uploadForm.reset();
-                alert("Import berhasil!");
-            },
-            onError: () => {
-                alert("Import gagal!");
             },
         });
     };
@@ -182,13 +193,84 @@ export default function GuestList({ auth, guests, filters }: Props) {
             <Head title="Daftar Tamu" />
 
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+                    {/* --- ALERT REPORT IMPORT (KODE BARU) --- */}
+                    {importResults && (
+                        <Card
+                            className={`border-l-4 ${importResults.failed > 0 ? "border-l-amber-500" : "border-l-green-500"}`}
+                        >
+                            <CardHeader className="pb-3">
+                                <div className="flex items-center gap-2">
+                                    {importResults.failed > 0 ? (
+                                        <AlertTriangle className="h-5 w-5 text-amber-600" />
+                                    ) : (
+                                        <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                    )}
+                                    <CardTitle className="text-lg">
+                                        Laporan Import Selesai
+                                    </CardTitle>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-sm text-muted-foreground mb-4">
+                                    Berhasil diproses:{" "}
+                                    <span className="font-bold text-green-600">
+                                        {importResults.success}
+                                    </span>{" "}
+                                    | Gagal:{" "}
+                                    <span className="font-bold text-red-600">
+                                        {importResults.failed}
+                                    </span>
+                                </p>
+
+                                {importResults.failed > 0 && (
+                                    <div className="rounded-md border bg-slate-50 overflow-hidden">
+                                        <Table>
+                                            <TableHeader className="bg-slate-100">
+                                                <TableRow>
+                                                    <TableHead className="w-20 py-2">
+                                                        Baris
+                                                    </TableHead>
+                                                    <TableHead className="py-2">
+                                                        Nama
+                                                    </TableHead>
+                                                    <TableHead className="py-2">
+                                                        Penyebab Gagal
+                                                    </TableHead>
+                                                </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                                {importResults.errors.map(
+                                                    (err, idx) => (
+                                                        <TableRow key={idx}>
+                                                            <TableCell className="py-2 text-xs font-mono">
+                                                                {err.row}
+                                                            </TableCell>
+                                                            <TableCell className="py-2 text-xs font-medium">
+                                                                {err.name}
+                                                            </TableCell>
+                                                            <TableCell className="py-2 text-xs text-red-600">
+                                                                {err.errors.join(
+                                                                    ", ",
+                                                                )}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    ),
+                                                )}
+                                            </TableBody>
+                                        </Table>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    )}
+
                     <Card>
                         <CardHeader>
                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                 <CardTitle>Manajemen Tamu Undangan</CardTitle>
                                 <div className="flex flex-wrap gap-2">
-                                    {/* Add Guest Button */}
+                                    {/* Add Guest */}
                                     <Dialog
                                         open={isAddDialogOpen}
                                         onOpenChange={setIsAddDialogOpen}
@@ -205,10 +287,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                     <DialogTitle>
                                                         Tambah Tamu Baru
                                                     </DialogTitle>
-                                                    <DialogDescription>
-                                                        Tambahkan tamu undangan
-                                                        satu per satu
-                                                    </DialogDescription>
                                                 </DialogHeader>
                                                 <div className="grid gap-4 py-4">
                                                     <div>
@@ -224,11 +302,10 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                         .value,
                                                                 )
                                                             }
-                                                            placeholder="I Made Agus Susila"
                                                             required
                                                         />
                                                         {errors.name && (
-                                                            <p className="text-sm text-red-600 mt-1">
+                                                            <p className="text-xs text-red-500 mt-1">
                                                                 {errors.name}
                                                             </p>
                                                         )}
@@ -246,7 +323,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                         .value,
                                                                 )
                                                             }
-                                                            placeholder="08123456789"
                                                         />
                                                     </div>
                                                     <div>
@@ -262,7 +338,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                         .value,
                                                                 )
                                                             }
-                                                            placeholder="Denpasar, Bali"
                                                         />
                                                     </div>
                                                     <div>
@@ -270,7 +345,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                             Kategori
                                                         </label>
                                                         <select
-                                                            className="w-full rounded-md border border-gray-300 p-2"
+                                                            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                                                             value={
                                                                 data.invitation_type
                                                             }
@@ -309,7 +384,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                         </DialogContent>
                                     </Dialog>
 
-                                    {/* Upload CSV Button */}
+                                    {/* Import CSV */}
                                     <Dialog
                                         open={isUploadDialogOpen}
                                         onOpenChange={setIsUploadDialogOpen}
@@ -324,45 +399,28 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                             <form onSubmit={handleUpload}>
                                                 <DialogHeader>
                                                     <DialogTitle>
-                                                        Import Tamu dari
-                                                        CSV/Excel
+                                                        Import Tamu
                                                     </DialogTitle>
                                                     <DialogDescription>
-                                                        Upload file CSV atau
-                                                        Excel dengan format:
-                                                        name, phone, address,
-                                                        type
+                                                        Upload file CSV/Excel
+                                                        (Pemisah titik koma ';'
+                                                        didukung).
                                                     </DialogDescription>
                                                 </DialogHeader>
                                                 <div className="grid gap-4 py-4">
-                                                    <div>
-                                                        <Input
-                                                            type="file"
-                                                            accept=".csv,.xlsx,.xls"
-                                                            onChange={(e) =>
-                                                                uploadForm.setData(
-                                                                    "file",
-                                                                    e.target
-                                                                        .files?.[0] ||
+                                                    <Input
+                                                        type="file"
+                                                        accept=".csv,.xlsx,.xls"
+                                                        onChange={(e) =>
+                                                            uploadForm.setData(
+                                                                "file",
+                                                                e.target
+                                                                    .files?.[0] ||
                                                                     null,
-                                                                )
-                                                            }
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                                        <p className="text-sm text-blue-800 mb-2">
-                                                            <strong>
-                                                                Format CSV:
-                                                            </strong>
-                                                        </p>
-                                                        <code className="text-xs bg-white px-2 py-1 rounded block">
-                                                            name,phone,address,type
-                                                            <br />
-                                                            "I Made
-                                                            Agus",0812345678,"Denpasar",keluarga
-                                                        </code>
-                                                    </div>
+                                                            )
+                                                        }
+                                                        required
+                                                    />
                                                 </div>
                                                 <DialogFooter>
                                                     <Button
@@ -378,40 +436,24 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                         </DialogContent>
                                     </Dialog>
 
-                                    {/* Export Dropdown Button */}
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button size="sm" variant="outline">
-                                                <Download className="h-4 w-4 mr-2" />
-                                                Export
+                                                <Download className="h-4 w-4 mr-2" />{" "}
+                                                Export{" "}
                                                 <ChevronDown className="h-4 w-4 ml-2" />
                                             </Button>
                                         </DropdownMenuTrigger>
-                                        <DropdownMenuContent
-                                            align="end"
-                                            className="w-56"
-                                        >
-                                            <DropdownMenuLabel>
-                                                Pilih Format Export
-                                            </DropdownMenuLabel>
-                                            <DropdownMenuSeparator />
+                                        <DropdownMenuContent align="end">
                                             <DropdownMenuItem asChild>
                                                 <a
                                                     href={route(
                                                         "admin.guests.export.links",
                                                     )}
-                                                    className="flex items-center cursor-pointer"
+                                                    className="flex items-center"
                                                 >
-                                                    <Link2 className="h-4 w-4 mr-2" />
-                                                    <div className="flex flex-col">
-                                                        <span className="font-medium">
-                                                            Invitation Links
-                                                        </span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            Nama + Link (untuk
-                                                            share)
-                                                        </span>
-                                                    </div>
+                                                    <Link2 className="h-4 w-4 mr-2" />{" "}
+                                                    Invitation Links
                                                 </a>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem asChild>
@@ -419,18 +461,10 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                     href={route(
                                                         "admin.guests.export.full",
                                                     )}
-                                                    className="flex items-center cursor-pointer"
+                                                    className="flex items-center"
                                                 >
-                                                    <FileText className="h-4 w-4 mr-2" />
-                                                    <div className="flex flex-col">
-                                                        <span className="font-medium">
-                                                            Full Data
-                                                        </span>
-                                                        <span className="text-xs text-muted-foreground">
-                                                            Semua field (untuk
-                                                            backup)
-                                                        </span>
-                                                    </div>
+                                                    <FileText className="h-4 w-4 mr-2" />{" "}
+                                                    Full Data
                                                 </a>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -439,26 +473,24 @@ export default function GuestList({ auth, guests, filters }: Props) {
                             </div>
                         </CardHeader>
                         <CardContent>
-                            {/* Search & Filters */}
-                            <form onSubmit={handleSearch} className="mb-6">
-                                <div className="flex gap-2">
-                                    <div className="relative flex-1">
-                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                        <Input
-                                            type="search"
-                                            placeholder="Cari nama atau telepon..."
-                                            value={searchTerm}
-                                            onChange={(e) =>
-                                                setSearchTerm(e.target.value)
-                                            }
-                                            className="pl-10"
-                                        />
-                                    </div>
-                                    <Button type="submit">Cari</Button>
+                            <form
+                                onSubmit={handleSearch}
+                                className="mb-6 flex gap-2"
+                            >
+                                <div className="relative flex-1">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                    <Input
+                                        placeholder="Cari nama atau telepon..."
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
+                                        className="pl-10"
+                                    />
                                 </div>
+                                <Button type="submit">Cari</Button>
                             </form>
 
-                            {/* Table */}
                             <div className="rounded-md border">
                                 <Table>
                                     <TableHeader>
@@ -467,7 +499,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                             <TableHead>Telepon</TableHead>
                                             <TableHead>Kategori</TableHead>
                                             <TableHead>Status</TableHead>
-                                            <TableHead>Link</TableHead>
                                             <TableHead className="text-right">
                                                 Aksi
                                             </TableHead>
@@ -484,7 +515,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                         {guest.phone || "-"}
                                                     </TableCell>
                                                     <TableCell>
-                                                        <span className="capitalize text-sm bg-gray-100 px-2 py-1 rounded">
+                                                        <span className="capitalize text-xs bg-gray-100 px-2 py-1 rounded">
                                                             {
                                                                 guest.invitation_type
                                                             }
@@ -492,23 +523,19 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                     </TableCell>
                                                     <TableCell>
                                                         {guest.is_opened ? (
-                                                            <div className="flex items-center gap-1 text-green-600">
-                                                                <Eye className="h-4 w-4" />
-                                                                <span className="text-sm">
-                                                                    Dibuka
-                                                                </span>
+                                                            <div className="flex items-center gap-1 text-green-600 text-xs">
+                                                                <Eye className="h-3 w-3" />{" "}
+                                                                Dibuka
                                                             </div>
                                                         ) : (
-                                                            <div className="flex items-center gap-1 text-orange-600">
-                                                                <EyeOff className="h-4 w-4" />
-                                                                <span className="text-sm">
-                                                                    Belum
-                                                                </span>
+                                                            <div className="flex items-center gap-1 text-orange-600 text-xs">
+                                                                <EyeOff className="h-3 w-3" />{" "}
+                                                                Belum
                                                             </div>
                                                         )}
                                                     </TableCell>
-                                                    <TableCell>
-                                                        <div className="flex gap-1">
+                                                    <TableCell className="text-right">
+                                                        <div className="flex justify-end gap-1">
                                                             <Button
                                                                 size="sm"
                                                                 variant="ghost"
@@ -517,28 +544,9 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                         guest.slug,
                                                                     )
                                                                 }
-                                                                title="Copy link"
                                                             >
                                                                 <Copy className="h-4 w-4" />
                                                             </Button>
-                                                            <Button
-                                                                size="sm"
-                                                                variant="ghost"
-                                                                asChild
-                                                                title="Buka undangan"
-                                                            >
-                                                                <a
-                                                                    href={`/metatah-tjikra-family/to/${guest.slug}`}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                >
-                                                                    <ExternalLink className="h-4 w-4" />
-                                                                </a>
-                                                            </Button>
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell className="text-right">
-                                                        <div className="flex justify-end gap-2">
                                                             <Button
                                                                 size="sm"
                                                                 variant="ghost"
@@ -547,7 +555,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                         guest,
                                                                     )
                                                                 }
-                                                                title="Edit"
                                                             >
                                                                 <Pencil className="h-4 w-4" />
                                                             </Button>
@@ -559,8 +566,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                                         guest,
                                                                     )
                                                                 }
-                                                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                                title="Hapus"
+                                                                className="text-red-600"
                                                             >
                                                                 <Trash2 className="h-4 w-4" />
                                                             </Button>
@@ -571,8 +577,8 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                         ) : (
                                             <TableRow>
                                                 <TableCell
-                                                    colSpan={6}
-                                                    className="text-center py-8 text-muted-foreground"
+                                                    colSpan={5}
+                                                    className="text-center py-8"
                                                 >
                                                     Tidak ada data tamu
                                                 </TableCell>
@@ -585,11 +591,11 @@ export default function GuestList({ auth, guests, filters }: Props) {
                             {/* Pagination */}
                             {guests.last_page > 1 && (
                                 <div className="flex items-center justify-between mt-6">
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-xs text-muted-foreground">
                                         Menampilkan {guests.data.length} dari{" "}
-                                        {guests.total} data
+                                        {guests.total} tamu
                                     </p>
-                                    <div className="flex gap-2">
+                                    <div className="flex gap-1">
                                         {Array.from(
                                             { length: guests.last_page },
                                             (_, i) => i + 1,
@@ -600,10 +606,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                                     "admin.guests.index",
                                                     { page, ...filters },
                                                 )}
-                                                className={`px-3 py-1 rounded ${page === guests.current_page
-                                                    ? "bg-blue-600 text-white"
-                                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                                    }`}
+                                                className={`px-3 py-1 text-xs rounded ${page === guests.current_page ? "bg-primary text-white" : "bg-gray-100 hover:bg-gray-200"}`}
                                             >
                                                 {page}
                                             </Link>
@@ -623,9 +626,6 @@ export default function GuestList({ auth, guests, filters }: Props) {
                             <form onSubmit={handleSubmit}>
                                 <DialogHeader>
                                     <DialogTitle>Edit Tamu</DialogTitle>
-                                    <DialogDescription>
-                                        Update informasi tamu undangan
-                                    </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
                                     <div>
@@ -670,7 +670,7 @@ export default function GuestList({ auth, guests, filters }: Props) {
                                             Kategori
                                         </label>
                                         <select
-                                            className="w-full rounded-md border border-gray-300 p-2"
+                                            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                                             value={data.invitation_type}
                                             onChange={(e) =>
                                                 setData(

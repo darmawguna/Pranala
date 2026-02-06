@@ -84,12 +84,20 @@ class GuestController extends Controller
     public function bulkImport(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv|max:2048',
+            'file' => 'required|mimes:xlsx,xls,csv,txt|max:2048',
         ]);
 
         $results = GuestImportService::import($request->file('file'));
 
-        return redirect()->back()->with('import_results', $results);
+        if ($results['failed'] > 0) {
+            return redirect()->back()->with([
+                'import_results' => $results
+            ]);
+        }
+        return redirect()->back()->with([
+            'success' => "Berhasil mengimport {$results['success']} data.",
+            'import_results' => $results
+        ]);
     }
 
     public function exportLinks()
